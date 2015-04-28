@@ -70,6 +70,9 @@ hold on
 plot(relerrxhat1,'m')
 plot(relerrxhat2,'r')
 hold off
-titre='Erreurs relatives des valeurs approchées de x';
+titre=['Erreurs relatives des valeurs approchées de x'];
 title(titre);
-disp('done')
+xlabel('Nombre de simulations');
+ylabel('Valeur de l''erreur');
+legend('sans pivot','pivot partiel','pivot total');
+disp('done');
