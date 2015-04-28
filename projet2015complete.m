@@ -1,7 +1,9 @@
 matricule = 394691;
 rand('state',matricule);
-if exist('condA') ~= 1, condA = 1.e3; end
-if exist('sizeA') ~= 1, sizeA = 100; end
+sizeA = 30;
+condA = 1.e5;
+if exist('condA') ~= 1,  condA = 1.e5;end
+if exist('sizeA') ~= 1,  sizeA = 30;end
 n = sizeA;
 
 % create matrices of size n x n with given condition number
@@ -21,9 +23,7 @@ condAtest = cond(A)
 x = floor(10*rand(n,1));
 b = A*x;
 
-prompt='Entrez la précision machine : ';
-eps2=input(prompt);
-%eps2 = 1.e-8; % simulated machine precision (eps/2)
+eps2 = 1.e-8; % simulated machine precision (eps/2)
 nsimul = 100; % number of simulation runs
 
 
@@ -34,12 +34,23 @@ for simul = 1:nsimul,
    rho = (rand(n,1)-0.5)*eps2;
 
    bhat = b.*(1+rho);
-   relerrbhat = norm((bhat-b)/b);%mean(abs((bhat-b)./b));%%
+   %relerrbhat = norm((bhat-b)/b);
+   relerrbhat = norm(-bhat+b)/norm(b);%mean(abs((bhat-b)./b));%%
    xhat = A\bhat;
-   relerrxhat = norm((xhat-x)/x);%mean(abs((xhat-x)./x));%%
+   %relerrxhat = norm((xhat-x)/x);%mean(abs((xhat-x)./x));%%
+   relerrxhat = norm(-xhat+x)/norm(x);
    kappa(simul) = relerrxhat/relerrbhat;
 end
+figure
 plot(kappa)
+%outfilename = [’projet’ num2str(matricule) ’graph’ num2str(graphnumber)];
+
+
+title('kappa');
+xlabel('Erreur relative de b');
+ylabel('Erreur relative de x');
+filename=strcat('projet',num2str(matricule),'kappa_','condA-',num2str(condA),'_sizeA-',num2str(sizeA));
+print(filename,'-djpeg');
 kappacond = mean(kappa)/condA
 
 % (2) stability
@@ -70,9 +81,11 @@ hold on
 plot(relerrxhat1,'m')
 plot(relerrxhat2,'r')
 hold off
-titre=['Erreurs relatives des valeurs approch�es de x'];
+titre=['Stabilité'];
 title(titre);
 xlabel('Nombre de simulations');
-ylabel('Valeur de l''erreur');
+ylabel('Valeur de l''erreur relative');
 legend('sans pivot','pivot partiel','pivot total');
+filename=strcat('projet',num2str(matricule),'stability_','condA-',num2str(condA),'_sizeA-',num2str(sizeA));
+print(filename,'-djpeg');
 disp('done');
