@@ -1,5 +1,3 @@
-prompt='Entrez la précision machine';
-eps=input(prompt);
 matricule = 394691;
 rand('state',matricule);
 if exist('condA') ~= 1, condA = 1.e3; end
@@ -23,7 +21,9 @@ condAtest = cond(A)
 x = floor(10*rand(n,1));
 b = A*x;
 
-eps2 = 1.e-8; % simulated machine precision (eps/2)
+prompt='Entrez la précision machine : ';
+eps2=input(prompt);
+%eps2 = 1.e-8; % simulated machine precision (eps/2)
 nsimul = 100; % number of simulation runs
 
 
